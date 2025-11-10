@@ -683,9 +683,19 @@ class SoupStrainer(ElementFilter):
 
 
 class SoupReplacer:
-    def __init__(self, og_tag: str, alt_tag: str):
+    def __init__(
+        self,
+        og_tag: Optional[str]=None,
+        alt_tag: Optional[str]=None,
+        name_xformer: Optional[Callable[[str], str]]=None,
+        attrs_xformer: Optional[Callable[[Dict[str]], Dict[str]]]=None,
+        xformer: Optional[Callable[[Tag], None]]=None
+    ):
         self.og_tag = og_tag
         self.alt_tag = alt_tag
+        self.name_xformer = name_xformer
+        self.attrs_xformer = attrs_xformer
+        self.xformer = xformer
     
     def match(self, name: str):
         return name == self.og_tag

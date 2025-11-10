@@ -6,10 +6,14 @@ from bs4.filter import SoupReplacer
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 if len(sys.argv) != 2:
-  raise Exception("Invalid usage: python task6.py <filename>")
+  raise Exception("Invalid usage: python task7.py <filename>")
 
 soup = None
-replacer = SoupReplacer("b", "blockquote")
+def xformer(tag):
+  if tag.name == "p":
+    tag.attrs["class"] = "test"
+replacer = SoupReplacer(xformer=xformer)
+
 try:
   with open(sys.argv[1], "r") as fp:
     soup = BeautifulSoup(fp, "lxml", replacer=replacer)

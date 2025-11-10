@@ -1050,11 +1050,16 @@ class BeautifulSoup(Tag):
         if tag is None:
             return tag
         
-        if (
-                self.replacer
-                and self.replacer.match(tag.name)
-            ):
-            tag.name = self.replacer.alt_tag
+        if self.replacer:
+            if self.replacer.og_tag and self.replacer.alt_tag:
+                if self.replacer.match(tag.name):
+                    tag.name = self.replacer.alt_tag
+            elif self.replacer.name_xformer:
+                tag.name = self.replacer.name_xformer(tag.name)
+            elif self.replacer.attrs_xformer:
+                tag.attrs = self.replacer.attrs_xformer(tag.attrs)
+            elif self.replacer.xformer:
+                self.replacer.xformer(tag)
 
         if self._most_recent_element is not None:
             self._most_recent_element.next_element = tag
