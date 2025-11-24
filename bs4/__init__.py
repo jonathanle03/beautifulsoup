@@ -1158,6 +1158,12 @@ class BeautifulSoup(Tag):
         return prefix + super(BeautifulSoup, self).decode(
             indent_level, eventual_encoding, formatter, iterator
         )
+    
+    def __iter__(self) -> Iterator[Tag]:
+        """Iterate over all tags in the document in document order."""
+        for element in self.descendants:
+            if isinstance(element, Tag):
+                yield element
 
 
 # Aliases to make it easier to get started quickly, e.g. 'from bs4 import _soup'

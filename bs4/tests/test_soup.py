@@ -600,3 +600,81 @@ class TestEncodingConversion(SoupTest):
         # The internal data structures can be encoded as UTF-8.
         soup_from_unicode = self.soup(self.unicode_data)
         assert soup_from_unicode.encode("utf-8") == self.utf8_data
+
+
+class TestSoupIteration(SoupTest):
+    def test_iterate_over_tags_basic_html(self):
+        html_doc = """
+        <html>
+            <head>
+            </head>
+            <body>
+                <a>link</a>
+                <b>bold</b>
+            </body>
+        </html>
+        """
+
+        soup = BeautifulSoup(html_doc, "html.parser")
+        tags = [tag.name for tag in soup]
+        assert tags == ["html", "head", "body", "a", "b"]
+
+    def test_iterate_over_tags_doc_ex_html(self):
+        html_doc = """
+        <p class="title"><b>The Dormouse's story</b></p>
+        <p class="story">Once upon a time there were three little sisters; and their names were
+        <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+        <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+        <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>; and they lived at the bottom of a well.
+        </p>
+        """
+
+        soup = BeautifulSoup(html_doc, "html.parser")
+        tags = [tag.name for tag in soup]
+        assert tags == ["p", "b", "p", "a", "a", "a"]
+    
+    def test_iterate_over_tags_nested_html(self):
+        html_doc = """
+        <nav>
+            <ul>
+                <li><a href="#intro">Intro</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        """
+
+        soup = BeautifulSoup(html_doc, "html.parser")
+        tags = [tag.name for tag in soup]
+        assert tags == ["nav", "ul", "li", "a", "li", "a", "li", "a", "li", "a"]
+    
+    def test_iterate_over_tags_basic_xml(self):
+        xml_doc = """
+        <root>
+            <child>data1</child>
+            <child>data2</child>
+        </root>
+        """
+
+        soup = BeautifulSoup(xml_doc, "xml")
+        tags = [tag.name for tag in soup]
+        assert tags == ["root", "child", "child"]
+    
+    def test_iterate_over_tags_nested_xml(self):
+        xml_doc = """
+        <library>
+            <book>
+                <title>Book One</title>
+                <author>Author A</author>
+            </book>
+            <book>
+                <title>Book Two</title>
+                <author>Author B</author>
+            </book>
+        </library>
+        """
+
+        soup = BeautifulSoup(xml_doc, "xml")
+        tags = [tag.name for tag in soup]
+        assert tags == ["library", "book", "title", "author", "book", "title", "author"]
