@@ -683,6 +683,29 @@ class SoupStrainer(ElementFilter):
 
 
 class SoupReplacer:
+    """
+    A `SoupReplacer` simply replaces one tag with another if the given
+    tag matches a certain criteria.
+
+    Internally, `SoupStrainer` objects work by converting the
+    constructor arguments into `MatchRule` objects. Incoming
+    tags/markup are matched against those rules.
+
+    :param og_tag: The name of the original tag to be replaced.
+
+    :param alt_tag: The name of the tag that will replace the original
+    tag.
+
+    :param name_xformer: A function that takes in a tag's name and
+    changes it.
+
+    :param attrs_xformer: A function that takes in a tag's attributes
+    and changes it.
+
+    :param xformer: A function that takes in a Tag object and changes
+    it in place.
+    """
+
     def __init__(
         self,
         og_tag: Optional[str]=None,
@@ -698,4 +721,10 @@ class SoupReplacer:
         self.xformer = xformer
     
     def match(self, name: str):
+        """
+        Checks if a given tag name matches the original tag name.
+        
+        :param name: The name of the tag to check.
+        :return: True if the tag name matches, False otherwise.
+        """
         return name == self.og_tag

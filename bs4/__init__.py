@@ -243,6 +243,11 @@ class BeautifulSoup(Tag):
          when parsing part of a document that would otherwise be too
          large to fit into memory.
 
+         :param replacer: A SoupReplacer. Replaces tags matching a
+         certain criteria defined in the SoupReplacer on initial parse.
+         This allows for a more time and memory efficient way to modify
+         predetermined parts of a document.
+
         :param from_encoding: A string indicating the encoding of the
          document to be parsed. Pass this in if Beautiful Soup is
          guessing wrongly about the document's encoding.
@@ -1160,7 +1165,9 @@ class BeautifulSoup(Tag):
         )
     
     def __iter__(self) -> Iterator[Tag]:
-        """Iterate over all tags in the document in document order."""
+        """
+        Iterate over all tags in the document in document order.
+        """
         for element in self.descendants:
             if isinstance(element, Tag):
                 yield element
